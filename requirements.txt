@@ -1,9 +1,5 @@
-websocket-client==1.6.4
-requests==2.31.0
-SpeechRecognition==3.10.0
-pyttsx3==2.90
-PyAudio==0.2.14
-rich==13.7.0
+requests==2.32.0
 Flask==3.0.2
 python-dotenv==1.0.0
 openai==1.7.0 
+gunicorn==21.2.0

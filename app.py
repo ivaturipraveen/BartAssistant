@@ -2,12 +2,13 @@ import json
 import os
 import requests
 from flask import Flask, render_template, request, jsonify, Response, stream_with_context
-import openai
 import base64
 import time
 import asyncio
 import concurrent.futures
 from dotenv import load_dotenv
+from openai import OpenAI 
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -21,8 +22,8 @@ BART_API = os.getenv("BART_API")
 # OpenAI API Key
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-# Configure OpenAI
-openai.api_key = OPENAI_API_KEY
+# Create OpenAI client
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 # Thread pool for parallel processing
 thread_pool = concurrent.futures.ThreadPoolExecutor(max_workers=4)
@@ -111,7 +112,7 @@ def generate_speech(text):
         start_time = time.time()
         print(f"[TTS Request] Converting to speech: {text}")
         
-        response = openai.audio.speech.create(
+        response = client.audio.speech.create(
             model="tts-1",
             voice="alloy",
             input=text,
@@ -209,4 +210,5 @@ def process_query():
 
 if __name__ == "__main__":
     print("[Server] Starting BART Voice Assistant")
-    app.run(debug=True, port=5001)
+    port = int(os.environ.get("PORT", 5001))
+    app.run(debug=True, host="0.0.0.0", port=port)
